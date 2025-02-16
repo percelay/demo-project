@@ -5,15 +5,29 @@ from glob import glob
 # Read single CSV file
 # --------------------------------------------------------------
 
+single_file_accel = pd.read_csv(
+    "../../demo-project/src/data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
+)
 
+single_file_gyro = pd.read_csv(
+    "../../demo-project/src/data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
+)
 # --------------------------------------------------------------
 # List all data in data/raw/MetaMotion
 # --------------------------------------------------------------
 
+files = glob("../../demo-project/src/data/raw/MetaMotion/*.csv")
+len(files)
 
 # --------------------------------------------------------------
 # Extract features from filename
 # --------------------------------------------------------------
+
+data_path = "../../demo-project/src/data/raw/MetaMotion/"
+f = files[0]
+
+# split and take in the first text chunk (Participant key)
+f.split("/")[-1].split("-")[0]
 
 
 # --------------------------------------------------------------
