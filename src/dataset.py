@@ -27,13 +27,36 @@ data_path = "../../demo-project/src/data/raw/MetaMotion/"
 f = files[0]
 
 # split and take in the first text chunk (Participant key)
-f.split("/")[-1].split("-")[0]
+participant = f.split("/")[-1].split("-")[0]
+# the exercise
+label = f.split("/")[-1].split("-")[1]
+# intensity - takes away the last character if its 1,2,3
+category = f.split("/")[-1].split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
 
+df = pd.read_csv(f)
+df["participant"] = participant
+df["label"] = label
+df["category"] = category
 
 # --------------------------------------------------------------
 # Read all files
 # --------------------------------------------------------------
 
+acc_df = []
+gyr_df = []
+
+acc_set = 1
+gyr_set = 1
+
+for f in files:
+    participant = f.split("/")[-1].split("-")[0]
+    label = f.split("/")[-1].split("-")[1]
+    category = f.split("/")[-1].split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
+    print(category)
+    df = pd.read_csv(f)
+    df["participant"] = participant
+    df["label"] = label
+    df["category"] = category
 
 # --------------------------------------------------------------
 # Working with datetimes
