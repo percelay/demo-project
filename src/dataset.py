@@ -42,8 +42,8 @@ df["category"] = category
 # Read all files
 # --------------------------------------------------------------
 
-acc_df = []
-gyr_df = []
+acc_df = pd.DataFrame()
+gyr_df = pd.DataFrame()
 
 acc_set = 1
 gyr_set = 1
@@ -52,20 +52,92 @@ for f in files:
     participant = f.split("/")[-1].split("-")[0]
     label = f.split("/")[-1].split("-")[1]
     category = f.split("/")[-1].split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
-    print(category)
+
     df = pd.read_csv(f)
+
     df["participant"] = participant
     df["label"] = label
     df["category"] = category
+
+    if "Accelerometer" in f:
+        df["set"] = acc_set
+        acc_df = pd.concat([acc_df, df])
+        acc_set += 1
+
+    if "Gyroscope" in f:
+        df["set"] = gyr_set
+        gyr_df = pd.concat([gyr_df, df])
+        gyr_set += 1
+
+
+acc_df[acc_df["set"] == 1].head()
+acc_df.iloc[40]
 
 # --------------------------------------------------------------
 # Working with datetimes
 # --------------------------------------------------------------
 
+acc_df.info()
+# epoch and time are int/object
+# need to convert
+
+pd.to_datetime(df["epoch (ms)"], unit="ms")
+pd.to_datetime(df["time (01:00)"]).dt.month
+
+# setting index for time series analysis
+acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
+gyr_df.index = pd.to_datetime(gyr_df["epoch (ms)"], unit="ms")
+
+# get rid of the other time columns, no need
+
+acc_df.drop(columns=["epoch (ms)", "time (01:00)", "elapsed (s)"], inplace=True)
+gyr_df.drop(columns=["epoch (ms)", "time (01:00)", "elapsed (s)"], inplace=True)
+
 
 # --------------------------------------------------------------
 # Turn into function
 # --------------------------------------------------------------
+files = glob("../../demo-project/src/data/raw/MetaMotion/*.csv")
+
+
+def read_data_from_files(files):
+    acc_df = pd.DataFrame()
+    gyr_df = pd.DataFrame()
+
+    acc_set = 1
+    gyr_set = 1
+
+    for f in files:
+        participant = f.split("/")[-1].split("-")[0]
+        label = f.split("/")[-1].split("-")[1]
+        category = f.split("/")[-1].split("-")[2].rstrip("123").rstrip("_MetaWear_2019")
+
+        df = pd.read_csv(f)
+
+        df["participant"] = participant
+        df["label"] = label
+        df["category"] = category
+
+        if "Accelerometer" in f:
+            df["set"] = acc_set
+            acc_df = pd.concat([acc_df, df])
+            acc_set += 1
+
+        if "Gyroscope" in f:
+            df["set"] = gyr_set
+            gyr_df = pd.concat([gyr_df, df])
+            gyr_set += 1
+
+    acc_df.index = pd.to_datetime(acc_df["epoch (ms)"], unit="ms")
+    gyr_df.index = pd.to_datetime(gyr_df["epoch (ms)"], unit="ms")
+
+    acc_df.drop(columns=["epoch (ms)", "time (01:00)", "elapsed (s)"], inplace=True)
+    gyr_df.drop(columns=["epoch (ms)", "time (01:00)", "elapsed (s)"], inplace=True)
+
+    return acc_df, gyr_df
+
+
+acc_df, gyr_df = read_data_from_files(files)
 
 
 # --------------------------------------------------------------
