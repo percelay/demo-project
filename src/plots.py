@@ -104,9 +104,92 @@ for label in df["label"].unique():
             .query("participant == @participant")
             .reset_index(drop=True)
         )
-        fig, ax = plt.subplots()
-        all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
-        ax.set_ylabel("acc_y")
-        ax.set_xlabel("acc_x")
-        plt.legend()
-        plt.show()
+        if len(all_axis_df) > 0:
+            fig, ax = plt.subplots()
+            all_axis_df[["acc_x", "acc_y", "acc_z"]].plot(ax=ax)
+            ax.set_ylabel("acc_y")
+            ax.set_xlabel("acc_x")
+            plt.legend()
+            plt.show()
+
+
+for label in df["label"].unique():
+    for participant in df["participant"].unique():
+        all_axis_df = (
+            df.query("label == @label")
+            .query("participant == @participant")
+            .reset_index(drop=True)
+        )
+        if len(all_axis_df) > 0:
+            fig, ax = plt.subplots()
+            all_axis_df[["gyr_x", "gyr_y", "gyr_z"]].plot(ax=ax)
+            ax.set_ylabel("gyr_y")
+            ax.set_xlabel("gyr_x")
+            plt.legend()
+            plt.show()
+
+
+# combining
+
+label = "row"
+participant = "A"
+combined_plot = (
+    df.query("label == @label")
+    .query("participant == @participant")
+    .reset_index(drop=True)
+    .reset_index(drop=True)
+)
+
+fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(20, 10))
+combined_plot[["acc_x", "acc_y", "acc_z"]].plot(ax=ax[0])
+combined_plot[["gyr_x", "gyr_y", "gyr_z"]].plot(ax=ax[1])
+
+ax[0].legend(
+    loc="upper center", bbox_to_anchor=(0.5, 1.3), ncol=3, fancybox=True, shadow=True
+)
+ax[1].legend(
+    loc="upper center", bbox_to_anchor=(0.5, 1.3), ncol=3, fancybox=True, shadow=True
+)
+
+ax[1].set_xlabel("samples")
+
+
+# create loop to plot all participants and labels with the compined plots
+
+
+for label in df["label"].unique():
+    for participant in df["participant"].unique():
+        combined_plot = (
+            df.query("label == @label")
+            .query("participant == @participant")
+            .reset_index(drop=True)
+            .reset_index(drop=True)
+        )
+        if len(combined_plot) > 0:
+            fig, ax = plt.subplots(nrows=2, sharex=True, figsize=(20, 10))
+            combined_plot[["acc_x", "acc_y", "acc_z"]].plot(ax=ax[0])
+            combined_plot[["gyr_x", "gyr_y", "gyr_z"]].plot(ax=ax[1])
+
+            ax[0].legend(
+                loc="upper center",
+                bbox_to_anchor=(0.5, 1.3),
+                ncol=3,
+                fancybox=True,
+                shadow=True,
+            )
+            ax[1].legend(
+                loc="upper center",
+                bbox_to_anchor=(0.5, 1.3),
+                ncol=3,
+                fancybox=True,
+                shadow=True,
+            )
+
+            ax[1].set_xlabel("samples")
+
+            plt.savefig(
+                f"../../demo-project/reports/figures/{label.title()}({participant}).png"
+            )
+            plt.close()
+
+#
