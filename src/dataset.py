@@ -5,25 +5,23 @@ from glob import glob
 # Read single CSV file
 # --------------------------------------------------------------
 
-single_file_accel = pd.read_csv(
-    "../../demo-project/src/data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
+
+pd.read_csv(
+    "/Users/dalepercelay/Coding Project Repos/Tester/demo-project/src/data/raw/MetaMotion/A-bench-heavy_MetaWear_2019-01-14T14.22.49.165_C42732BE255C_Accelerometer_12.500Hz_1.4.4.csv"
 )
 
-single_file_gyro = pd.read_csv(
-    "../../demo-project/src/data/raw/MetaMotion/A-bench-heavy2-rpe8_MetaWear_2019-01-11T16.10.08.270_C42732BE255C_Gyroscope_25.000Hz_1.4.4.csv"
-)
 # --------------------------------------------------------------
 # List all data in data/raw/MetaMotion
 # --------------------------------------------------------------
-
-files = glob("../../demo-project/src/data/raw/MetaMotion/*.csv")
+files = glob(
+    "/Users/dalepercelay/Coding Project Repos/Tester/demo-project/src/data/raw/MetaMotion/*.csv"
+)
 len(files)
 
 # --------------------------------------------------------------
 # Extract features from filename
 # --------------------------------------------------------------
-
-data_path = "../../demo-project/src/data/raw/MetaMotion/"
+data_path = "/Users/dalepercelay/Coding Project Repos/Tester/demo-project/src/data/raw/MetaMotion/"
 f = files[0]
 
 # split and take in the first text chunk (Participant key)
@@ -97,7 +95,9 @@ gyr_df.drop(columns=["epoch (ms)", "time (01:00)", "elapsed (s)"], inplace=True)
 # --------------------------------------------------------------
 # Turn into function
 # --------------------------------------------------------------
-files = glob("../../demo-project/src/data/raw/MetaMotion/*.csv")
+files = glob(
+    "/Users/dalepercelay/Coding Project Repos/Tester/demo-project/src/data/raw/MetaMotion/*.csv"
+)
 
 
 def read_data_from_files(files):
@@ -210,4 +210,6 @@ data_resampled["set"] = data_resampled["set"].astype(int)
 # Export dataset
 # --------------------------------------------------------------
 
-data_resampled.to_pickle("../../demo-project/src/data/interim/01_data_processed.pkl")
+data_resampled.to_pickle(
+    "/Users/dalepercelay/Coding Project Repos/Tester/demo-project/src/data/raw/MetaMotion/01_data_processed.pkl"
+)
